@@ -150,7 +150,38 @@ public class JasonNetworkAction {
                                 bodyBuilder.add(key, val);
                             }
                         }
+
+
                         RequestBody requestBody = bodyBuilder.build();
+                        /**
+                         *
+                         * Add by : Tanawat W.
+                         *
+                         * -------------------------------------
+                         *   "type": "$network.request",
+                         *    "options": {
+                         *     "url": "https://xxxx.com/apis/register",
+                         *     "method": "post",
+                         *     "header": {
+                         *        "Content-Type": "application/json;charset=utf-8"
+                         *      },
+                         *     "data": {
+                         *        {
+                         *          "userId": "{{$get.email}}",
+                         *          "password": "{{$get.password}}",
+                         *        }
+                         *     }
+                         *    }
+                         *------------------------------------------------------
+                         */
+                        if(options.has("header") && options.getJSONObject("header").has("Content-Type")){
+                            // new
+                            Log.d("",options.getJSONObject("data").toString());
+                            requestBody =  RequestBody.create(MediaType.parse(options.getJSONObject("header").getString("Content-Type")) , options.getJSONObject("data").toString())  ;
+                        }else{
+                            // old
+                            requestBody = bodyBuilder.build();
+                        }
 
                         request = builder
                                 .method(method, requestBody)
